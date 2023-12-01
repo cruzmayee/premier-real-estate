@@ -40,7 +40,8 @@ exports.orders_create_order =  (req, res, next) => {
             const order = new Order({
                 _id: new mongoose.Types.ObjectId(),
                 quantity: req.body.quantity,
-                product: req.body.productId
+                product: req.body.productId,
+                price: req.body.price,
             });
             return order.save()
 
