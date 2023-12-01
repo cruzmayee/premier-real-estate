@@ -42,7 +42,10 @@ exports.products_create_product = (req, res, next)=>{
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
         price:req.body.price,
-        productImage: req.file.path
+        productImage: req.file.path,
+        address: req.file.path,
+        property: req.file.path,
+        status: req.file.path
     });
     console.log(product)
 
@@ -53,6 +56,9 @@ exports.products_create_product = (req, res, next)=>{
             createdProduct:{
                 name:result.name,
                 price:result.price,
+                address:result.address,
+                property: result.property,
+                status: result.status,
                 _id:result._id,
                 request:{
                     type: 'POST',
