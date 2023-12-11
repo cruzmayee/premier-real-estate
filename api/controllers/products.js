@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 exports.products_get_all = (req, res, next)=>{
     Product.find()
-    .select('name price _id productImage')
+    .select('name price _id productImage address status property')
     .exec()
     .then(docs=>{
         const response={
@@ -13,6 +13,9 @@ exports.products_get_all = (req, res, next)=>{
                     name:doc.name,
                     price: doc.price,
                     productImage: doc.productImage,
+                    address: doc.address,
+                    status: doc.status,
+                    property: doc.property,
                     _id: doc._id,
                     request:{
                         type:'GET',
@@ -43,9 +46,9 @@ exports.products_create_product = (req, res, next)=>{
         name: req.body.name,
         price:req.body.price,
         productImage: req.file.path,
-        address: req.file.path,
-        property: req.file.path,
-        status: req.file.path
+        address: req.body.address,
+        property: req.body.property,
+        status: req.body.status
     });
     console.log(product)
 
@@ -56,6 +59,7 @@ exports.products_create_product = (req, res, next)=>{
             createdProduct:{
                 name:result.name,
                 price:result.price,
+                productImage: result.productImage,
                 address:result.address,
                 property: result.property,
                 status: result.status,
@@ -78,7 +82,7 @@ exports.products_create_product = (req, res, next)=>{
 exports.products_get_product = (req, res, next) => {
     const id = req.params.productID;
     Product.findById(id)
-    .select('name price _id productImage')
+    .select('name price _id productImage address status property')
     .exec()
     .then(result => {
         console.log("From Database",result); 
@@ -88,6 +92,9 @@ exports.products_get_product = (req, res, next) => {
                 retrievedProduct: {
                 name: result.name,
                 price: result.price,
+                status: result.status,
+                property: result.property,
+                address: result.address,
                 _id: result._id,
                 request: {
                     type: 'GET',
