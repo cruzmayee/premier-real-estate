@@ -1,5 +1,6 @@
 const Product = require('../models/product');
 const mongoose = require('mongoose');
+const fs = require('fs')
 
 exports.products_get_all = (req, res, next)=>{
     Product.find()
@@ -41,11 +42,16 @@ exports.products_get_all = (req, res, next)=>{
 }
 
 exports.products_create_product = (req, res, next)=>{
+    const imageBuffer = fs.readFileSync(req.file.path);
+
+  // Convert the image data to base64
+    const imageData = imageBuffer.toString('base64');
+    console.log(imageData)
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
         price:req.body.price,
-        productImage: req.file.path,
+        productImage: imageData,
         address: req.body.address,
         property: req.body.property,
         status: req.body.status
