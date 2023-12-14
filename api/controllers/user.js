@@ -3,6 +3,14 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+
+const admin = require("firebase-admin");
+const serviceAccount = require ("./login-ffaac-firebase-adminsdk-d4a5z-f5cebb4f4d.json");
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL:'https://login-ffaac-default-rtdb.firebaseio.com/'
+});
+
 exports.user_signup = (req, res, next)=>{
     User.find({
      email: req.body.email
@@ -28,11 +36,22 @@ exports.user_signup = (req, res, next)=>{
                  user
                  .save()
                  .then(result=>{
-                     console.log(result);
-                     res.status(201).json({
-                         message: 'User created'
-                     });
-                 })
+                    const user ={
+                        email:req.body.email,
+                        password:req.body.password
+            }
+            const userResponse = admin.auth ().createUser({
+                email:user.email,
+                password: user.password,
+                emailVerified: false,
+                disabled: false
+            }).then(resp=>{
+                res.status(201).json({
+                message:"User Created",
+                resp});
+                        })
+                      
+             })
                  .catch(err=>{
                      console.log(err);
                      res.status(500).json({
