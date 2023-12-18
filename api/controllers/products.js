@@ -4,7 +4,7 @@ const fs = require("fs");
 
 exports.products_get_all = (req, res, next) => {
   Product.find()
-    .select("name price _id productImage address status property")
+    .select("name price _id productImage address status property _user")
     .exec()
     .then((docs) => {
       const response = {
@@ -18,6 +18,7 @@ exports.products_get_all = (req, res, next) => {
             status: doc.status,
             property: doc.property,
             _id: doc._id,
+            _user: doc._user
             request: {
               type: "GET",
               url: "http://localhost:3000/products/" + doc._id,
@@ -41,7 +42,8 @@ exports.products_get_all = (req, res, next) => {
 };
 
 exports.products_create_product = (req, res, next) => {
-  const imageBuffer = fs.readFileSync(req.file.path);
+  // const imageBuffer = fs.readFileSync(req.file.path);
+  const imageBuffer = req.file.buffer
 
   // Convert the image data to base64
   const imageData = imageBuffer.toString("base64");
@@ -54,6 +56,7 @@ exports.products_create_product = (req, res, next) => {
     address: req.body.address,
     property: req.body.property,
     status: req.body.status,
+    _user: req.body.userId
   });
   console.log(product);
 
@@ -71,6 +74,7 @@ exports.products_create_product = (req, res, next) => {
           property: result.property,
           status: result.status,
           _id: result._id,
+          _user: result._user,
           request: {
             type: "POST",
             url: "http://localhost:3000/products/" + result._id,

@@ -35,6 +35,7 @@ exports.user_signup = (req, res, next) => {
             user
               .save()
               .then((result) => {
+                console.log(result)
                 const user = {
                   email: req.body.email,
                   password: req.body.password,
@@ -96,6 +97,7 @@ exports.user_login = (req, res, next) => {
           return res.status(200).json({
             message: "Auth Successful",
             token: token,
+            userId: user[0]._id
           });
         }
         res.status(401).json({
