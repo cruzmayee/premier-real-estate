@@ -112,6 +112,7 @@ exports.products_get_product = (req, res, next) => {
             _id: result._id,
             _user: result._user,
             details: result.details,
+            productImage: result.productImage,
             request: {
               type: "GET",
               url: "http://locahost:3000/products" + result._id,

@@ -145,7 +145,7 @@ exports.editUser = (req, res, next) => {
        message: "User updated",
        request: {
          type: "Update",
-         url: `tae/user/${id}`,
+         url: `link/user/${id}`,
        },
      });
     })
