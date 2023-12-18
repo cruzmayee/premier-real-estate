@@ -29,6 +29,7 @@ exports.user_signup = (req, res, next) => {
           } else {
             const user = new User({
               _id: new mongoose.Types.ObjectId(),
+              name: req.body.name,
               email: req.body.email,
               password: hash,
             });
@@ -37,12 +38,14 @@ exports.user_signup = (req, res, next) => {
               .then((result) => {
                 console.log(result)
                 const user = {
+                  name: req.body.name,
                   email: req.body.email,
                   password: req.body.password,
                 };
                 const userResponse = admin
                   .auth()
                   .createUser({
+                    name: user.name,
                     email: user.email,
                     password: user.password,
                     emailVerified: false,
@@ -85,6 +88,7 @@ exports.user_login = (req, res, next) => {
         if (result) {
           const token = jwt.sign(
             {
+              name: user[0].name,
               email: user[0].email,
               userId: user[0]._id,
             },
@@ -112,3 +116,43 @@ exports.user_login = (req, res, next) => {
       });
     });
 };
+
+exports.getUser = (req, res, next) => {
+ User.find({
+   _id: req.params.userId
+ }) 
+  .exec()
+  .then((user) => {
+    if (user.length >= 1) {
+      return res.status(200).json({
+        message: "Mail exists",
+        user
+      });
+    }
+    else {
+      return res.status(404).json({
+        message: "User not found"
+      })
+    }
+  })
+}
+exports.editUser = (req, res, next) => {
+  const id = req.params.userId
+ User.findOneAndUpdate({ _id: id }, { $set: req.body }) 
+  .exec()
+  .then((result) => {
+    res.status(200).json({
+       message: "User updated",
+       request: {
+         type: "Update",
+         url: `tae/user/${id}`,
+       },
+     });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: err,
+      });
+    });
+}

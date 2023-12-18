@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 exports.products_get_all = (req, res, next) => {
   Product.find()
-    .select("name price _id productImage address status property _user")
+    .select("name price _id productImage address status property _user details")
     .exec()
     .then((docs) => {
       const response = {
@@ -19,6 +19,7 @@ exports.products_get_all = (req, res, next) => {
             property: doc.property,
             _id: doc._id,
             _user: doc._user,
+            details: doc.details,
             request: {
               type: "GET",
               url: "http://localhost:3000/products/" + doc._id,
@@ -56,7 +57,8 @@ exports.products_create_product = (req, res, next) => {
     address: req.body.address,
     property: req.body.property,
     status: req.body.status,
-    _user: req.body.userId
+    _user: req.body.userId,
+    details: req.body.details
   });
   console.log(product);
 
@@ -75,6 +77,7 @@ exports.products_create_product = (req, res, next) => {
           status: result.status,
           _id: result._id,
           _user: result._user,
+          details: result.details,
           request: {
             type: "POST",
             url: "http://localhost:3000/products/" + result._id,
@@ -93,7 +96,7 @@ exports.products_create_product = (req, res, next) => {
 exports.products_get_product = (req, res, next) => {
   const id = req.params.productID;
   Product.findById(id)
-    .select("name price _id productImage address status property _user")
+    .select("name price _id productImage address status property _user details")
     .exec()
     .then((result) => {
       console.log("From Database", result);
@@ -108,6 +111,7 @@ exports.products_get_product = (req, res, next) => {
             address: result.address,
             _id: result._id,
             _user: result._user,
+            details: reqult.details,
             request: {
               type: "GET",
               url: "http://locahost:3000/products" + result._id,
@@ -129,10 +133,7 @@ exports.products_get_product = (req, res, next) => {
 exports.products_update_product = (req, res, next) => {
   const id = req.params.productID;
   const updateOps = {};
-  for (const ops of req.body) {
-    updateOps[ops.propName] = ops.value;
-  }
-  Product.findOneAndUpdate({ _id: id }, { $set: updateOps })
+  Product.findOneAndUpdate({ _id: id }, { $set: req.body })
     .exec()
     .then((result) => {
       res.status(200).json({
