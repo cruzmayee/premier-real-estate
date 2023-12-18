@@ -111,7 +111,7 @@ exports.products_get_product = (req, res, next) => {
             address: result.address,
             _id: result._id,
             _user: result._user,
-            details: reqult.details,
+            details: result.details,
             request: {
               type: "GET",
               url: "http://locahost:3000/products" + result._id,
