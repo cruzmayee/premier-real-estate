@@ -1,6 +1,6 @@
 const Product = require("../models/product");
 const mongoose = require("mongoose");
-const fs = require("fs");
+// const fs = require("fs");
 
 exports.products_get_all = (req, res, next) => {
   Product.find()
@@ -18,7 +18,7 @@ exports.products_get_all = (req, res, next) => {
             status: doc.status,
             property: doc.property,
             _id: doc._id,
-            _user: doc._user
+            _user: doc._user,
             request: {
               type: "GET",
               url: "http://localhost:3000/products/" + doc._id,
@@ -43,16 +43,16 @@ exports.products_get_all = (req, res, next) => {
 
 exports.products_create_product = (req, res, next) => {
   // const imageBuffer = fs.readFileSync(req.file.path);
-  const imageBuffer = req.file.buffer
+  // const imageBuffer = req.file.buffer
 
   // Convert the image data to base64
-  const imageData = imageBuffer.toString("base64");
-  console.log(imageData);
+  // const imageData = imageBuffer.toString("base64");
+  console.log(req.body.userId)
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
     price: req.body.price,
-    productImage: imageData,
+    productImage: req.body.productImage,
     address: req.body.address,
     property: req.body.property,
     status: req.body.status,
@@ -93,7 +93,7 @@ exports.products_create_product = (req, res, next) => {
 exports.products_get_product = (req, res, next) => {
   const id = req.params.productID;
   Product.findById(id)
-    .select("name price _id productImage address status property")
+    .select("name price _id productImage address status property _user")
     .exec()
     .then((result) => {
       console.log("From Database", result);
@@ -107,6 +107,7 @@ exports.products_get_product = (req, res, next) => {
             property: result.property,
             address: result.address,
             _id: result._id,
+            _user: result._user,
             request: {
               type: "GET",
               url: "http://locahost:3000/products" + result._id,

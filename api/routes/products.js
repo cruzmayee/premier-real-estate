@@ -13,8 +13,8 @@ const ProductsController = require("../controllers/products");
 //         cb(null, file.originalname);
 //     }
 // });
-const storage = multer.memoryStorage()
-const upload = multer({storage: storage})
+// const storage = multer.memoryStorage()
+// const upload = multer({storage: storage})
 
 // const fileFilter = (req, file, cb) =>{
 //     // reject a file
@@ -35,7 +35,7 @@ const upload = multer({storage: storage})
 
 router.get("/", ProductsController.products_get_all);
 
-router.post("/", checkAuth, upload.single('productImage'), ProductsController.products_create_product);
+router.post("/", checkAuth, ProductsController.products_create_product);
 
 router.get("/:productID", checkAuth, ProductsController.products_get_product);
 

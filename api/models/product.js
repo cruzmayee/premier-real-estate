@@ -8,7 +8,8 @@ const productSchema = new Schema({
     productImage: {type: String, required: true},
     address: {type: String, required: true},
     status: {type: String, required: true},
-    property: {type: String, required: true}
+    property: {type: String, required: true},
+    _user: {type: String, required: true}
 });
 
 module.exports = mongoose.model('Product', productSchema);
